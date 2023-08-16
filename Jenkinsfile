@@ -5,29 +5,12 @@ pipeline {
         stage('Load Variables') {
             steps {
                 script {                    
-                    def githubApiUrl = 'https://api.github.com/repos/tkvy4/devops/contents/variables.groovy'
-                    def githubToken = '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'
+                    // Charger les variables depuis variables.groovy
+                    def loadedVariables = load 'variables.groovy'
 
-                    //def response = sh(script: "curl -H 'Authorization: Bearer ${githubToken}' ${githubApiUrl}", returnStdout: true).trim()
-                    def response = sh(script: "curl -H 'Authorization: token ${githubToken}' ${githubApiUrl}", returnStdout: true).trim()
-                    echo "Réponse de curl : ${response}"
-                    
-                    def content = readJSON text: response
-
-                    def downloadUrl = content.download_url
-                    def decodedContent = sh(script: "curl -s ${downloadUrl} | base64 -d", returnStdout: true).trim()
-
-                    // Charger le contenu décodé du fichier variables.groovy
-                    loadScript text: decodedContent
-
-                    //def variables = evaluate(new GroovyShell().parse(decodedContent))
-
-                    // Définir les variables dans le contexte du pipeline
-                    //env.DOCKER_IMAGE = variables.DOCKER_IMAGE
-                    //env.AUTRE_VARIABLE = variables.AUTRE_VARIABLE
-
-                    echo "Ma variable : ${DOCKER_IMAGE}"
-                    echo "Autre variable : ${AUTRE_VARIABLE}"
+                    // Utiliser les variables chargées
+                    echo "Ma variable : ${loadedVariables.DOCKER_IMAGE}"
+                    echo "Autre variable : ${loadedVariables.AUTRE_VARIABLE}"
                 }
             }
         }
