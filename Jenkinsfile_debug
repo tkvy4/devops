@@ -67,7 +67,7 @@ pipeline {
     stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t ${final_path}'
+                    sh 'cp /home/kevin/git/devops/Dockerfile ./ $$ docker build -t ${docker} .'
                 }
             }
         }
