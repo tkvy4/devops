@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Load Variables') {
             steps {
-                script {
+                script {                    
                     def githubApiUrl = 'https://api.github.com/repos/tkvy4/devops/contents/variables.groovy'
                     def githubToken = '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'
 
@@ -16,6 +16,9 @@ pipeline {
 
                     def downloadUrl = content.download_url
                     def decodedContent = sh(script: "curl -s ${downloadUrl} | base64 -d", returnStdout: true).trim()
+
+                    // Charger le contenu décodé du fichier variables.groovy
+                    loadScript text: decodedContent
 
                     def variables = evaluate(new GroovyShell().parse(decodedContent))
 
