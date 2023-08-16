@@ -2,18 +2,18 @@ pipeline {
     agent any
 
     stages {
-        stage('Load Variables') {
-            steps {
-                script {
+        //stage('Load Variables') {
+         //   steps {
+         //       script {
                     // Charger les variables depuis variables.groovy dans le même répertoire
-                    def loadedVariables = load 'devops/variables.groovy'
+         //           def loadedVariables = load 'devops/variables.groovy'
 
                     // Utiliser les variables chargées
-                    echo "Ma variable : ${loadedVariables.DOCKER_IMAGE}"
-                    echo "Autre variable : ${loadedVariables.AUTRE_VARIABLE}"
-               }
-            }
-        }
+         //           echo "Ma variable : ${loadedVariables.DOCKER_IMAGE}"
+         //           echo "Autre variable : ${loadedVariables.AUTRE_VARIABLE}"
+         //      }
+         //   }
+        //}
         stage('Checkout') {
             steps {
                 checkout scm
