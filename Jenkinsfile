@@ -6,7 +6,7 @@ pipeline {
             steps {
                 script {                    
                     // Charger les variables depuis variables.groovy
-                    def loadedVariables = load 'variables.groovy'
+                    def loadedVariables = load '/devops/variables.groovy'
 
                     // Utiliser les variables chargées
                     echo "Ma variable : ${loadedVariables.DOCKER_IMAGE}"
