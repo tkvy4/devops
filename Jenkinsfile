@@ -5,7 +5,7 @@ pipeline {
         stage('Load Variables') {
             steps {
                 script {
-                    def githubApiUrl = 'https://api.github.com/repos/tkvy4/devops/variables.groovy'
+                    def githubApiUrl = 'https://api.github.com/repos/tkvy4/devops/blob/main/variables.groovy'
                     def githubToken = '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'
 
                     def response = sh(script: "curl -H 'Authorization: token ${githubToken}' ${githubApiUrl}", returnStdout: true).trim()
