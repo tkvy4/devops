@@ -55,6 +55,7 @@ pipeline {
 
                     if (directoryExists == "true") {
                         echo "Le répertoire existe déjà. Continuer le build..."
+                        sh 'cd ${final_path}'
                     } else {
                         echo "Le répertoire n'existe pas. Création..."
                         sh 'mkdir ${final_path} && cd ${final_path}'
