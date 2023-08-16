@@ -11,8 +11,10 @@ pipeline {
                     // Utiliser les variables chargées
                     echo "Docker image : ${loadedVariables.DOCKER_IMAGE}"
                     //echo "Encore une autre variable : ${loadedVariables.AUTRE_VARIABLE}"
-                    def path = '/home/kevin/docker_container/${loadedVariables.DOCKER_IMAGE}'
-                    echo "${path}"
+                    
+                    def path = '/home/kevin/docker_container/'
+                    def final_path = "${path}" + ${loadedVariables.DOCKER_IMAGE}
+                    echo "${FINAL_PATH}"
                 }
             }
         }
