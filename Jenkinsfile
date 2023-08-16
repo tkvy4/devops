@@ -2,76 +2,61 @@ pipeline {
     agent any
 
     stages {
-        stage('Load Variables') {
-            steps {
-                script {
-                    // Charger les variables depuis autre_variables.groovy dans le même répertoire
-                    def loadedVariables = load 'variables.groovy'
-
-                    // Utiliser les variables chargées
-                    echo "Docker image : ${loadedVariables.DOCKER_IMAGE}"
-                    //echo "Encore une autre variable : ${loadedVariables.AUTRE_VARIABLE}"
-                    echo "Path : /home/kevin/docker_container/${loadedVariables.DOCKER_IMAGE}"
-                }
-            }
-        }
-        stage('Checkout') {
+        stage('Initial checkout') {
             steps {
                 checkout scm
             }
         }
-        stage('Supprimer devops') {
+        stage('Clear existing devops cloned repo') {
             steps {
                 script {
-                    // Supprimez le repo devops Github
-                    //sh 'rm -rf /home/kevin/git/devops'
-
                     def result = sh(script: 'rm -rf /home/kevin/git/devops', returnStatus: true)
 
                     if (result == 0) {
-                        echo "Le répertoire a été supprimé avec succès."
+                        echo "Directory deleted successfully."
                     } else {
-                        echo "La suppression du répertoire a échoué."
+                        echo "Directory deletion failed."
+                        }
                     }
                 }
             }
-        }
-        stage('Get Dockerfile') {
+        stage('Clone devops repo') {
             steps {
                 script {
-                    // Récupérez le Dockerfile
+                    // Clone repository
                     sh 'cd /home/kevin/git && git clone git@github.com:tkvy4/devops.git'
+                     }
                 }
             }
-        }
-        stage('Create path') {
+        stage('Build and run the container') {
             steps {
                 script {
-                    def directoryExists = sh(script: '[ -d "/home/kevin/docker_container/'${loadedVariables.DOCKER_IMAGE}'" ] && echo "true" || echo "false"', returnStdout: true).trim()
+                    // Load variables from variables.groovy in Github repo
+                    def loadedVariables = load 'variables.groovy'
+
+                    // Define container path directory
+                    def path = "/home/kevin/docker_container/${loadedVariables.DOCKER_IMAGE}"
+
+                    // Check if the directory exists
+                    def directoryExists = sh(script: "[ -d ${path} ] && echo 'true' || echo 'false'", returnStdout: true).trim()
 
                     if (directoryExists == "true") {
-                        echo "Le répertoire existe déjà. Continuer le build..."
+                        echo "Directory already exists, continue build..."
+                        sh "cd ${path}"
                     } else {
-                        echo "Le répertoire n'existe pas. Création..."
-                        sh 'mkdir /home/kevin/docker_container/'${loadedVariables.DOCKER_IMAGE}' && cd /home/kevin/docker_container/'${loadedVariables.DOCKER_IMAGE}'
-                        echo "Répertoire crée."
+                        echo "Directory doesn't exist, creating..."
+                        sh "mkdir ${path} && cd ${path}"
+                        echo "Directory created."
+                    }
+
+                    // Copy Dockerfile from repo
+                    sh "cp /home/kevin/git/devops/Dockerfile ${path}/"
+                    
+                    // Build and run the container
+                    sh "docker build -t ${loadedVariables.DOCKER_IMAGE} ."
+                    sh "docker run -d -p 8081:80 ${loadedVariables.DOCKER_IMAGE}"
                     }
                 }
             }
         }
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    sh 'docker build -t '${loadedVariables.DOCKER_IMAGE}' .'
-                }
-            }
-        }
-        stage('Run Docker Image') {
-            steps {
-                script {
-                    sh 'docker run -d -p 8081:80 '${loadedVariables.DOCKER_IMAGE}''
-                }
-            }
-        }   
-    }
 }
