@@ -30,8 +30,15 @@ pipeline {
         stage('Create path') {
             steps {
                 script {
-                    // Construire l'image Docker à partir du Dockerfile
-                    sh 'mkdir /home/kevin/docker_container/linux_server_jenkins && cd /home/kevin/docker_container/linux_server_jenkins'
+                    def directoryExists = sh(script: '[ -d "/home/kevin/docker_container/linux_server_jenkins" ] && echo "true" || echo "false"', returnStdout: true).trim()
+
+                    if (directoryExists == "true") {
+                        echo "Le répertoire existe déjà. Continuer le build..."
+                    } else {
+                        echo "Le répertoire n'existe pas. Création..."
+                        sh 'mkdir /home/kevin/docker_container/linux_server_jenkins && cd /home/kevin/docker_container/linux_server_jenkins'
+                        echo "Répertoire crée."
+                    }
                 }
             }
         }
