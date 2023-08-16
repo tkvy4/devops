@@ -10,10 +10,12 @@ pipeline {
         stage('Supprimer devops') {
             steps {
                 script {
-                    def result = sh(script: "sudo rm -rf /home/kevin/git/devops", returnStatus: true)
-                    if (result != 0) {
-                    error("Erreur lors de la suppression de devops")
-                    }
+                    // Supprimez le repo devops Github
+                    sh 'rm -rf /home/kevin/git/devops'
+                    //def result = sh(script: "sudo rm -rf /home/kevin/git/devops", returnStatus: true)
+                    //if (result != 0) {
+                    //error("Erreur lors de la suppression de devops")
+                    //}
                 }
             }
         }
