@@ -36,5 +36,13 @@ pipeline {
                 }
             }
         }
+    stage('Get Dockerfile') {
+            steps {
+                script {
+                    // Récupérez le Dockerfile
+                    sh 'cd /home/kevin/git && git clone git@github.com:tkvy4/devops.git'
+                }
+            }
+        }
     }
 }
