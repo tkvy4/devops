@@ -2,6 +2,25 @@ pipeline {
     agent any
 
     stages {
+        stage('Load Variables') {
+            steps {
+                script {
+                    def githubApiUrl = 'https://api.github.com/repos/tkvy4/devops/variables.groovy'
+                    def githubToken = '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'
+
+                    def response = sh(script: "curl -H 'Authorization: token ${githubToken}' ${githubApiUrl}", returnStdout: true).trim()
+                    def content = readJSON text: response
+
+                    def variables = evaluate(new GroovyShell().parse(new String(Base64.decodeBase64(content.content))))
+
+                    // Définir les variables dans le contexte du pipeline
+                    env.DOCKER_IMAGE = variables.DOCKER_IMAGE
+                    env.AUTRE_VARIABLE = variables.AUTRE_VARIABLE
+                }
+            }
+        }
+
+    stages {
         stage('Checkout') {
             steps {
                 checkout scm
@@ -30,13 +49,13 @@ pipeline {
         stage('Create path') {
             steps {
                 script {
-                    def directoryExists = sh(script: '[ -d "/home/kevin/docker_container/linux_server_jenkins" ] && echo "true" || echo "false"', returnStdout: true).trim()
+                    def directoryExists = sh(script: '[ -d "/home/kevin/docker_container/${env.DOCKER_IMAGE}" ] && echo "true" || echo "false"', returnStdout: true).trim()
 
                     if (directoryExists == "true") {
                         echo "Le répertoire existe déjà. Continuer le build..."
                     } else {
                         echo "Le répertoire n'existe pas. Création..."
-                        sh 'mkdir /home/kevin/docker_container/linux_server_jenkins && cd /home/kevin/docker_container/linux_server_jenkins'
+                        sh 'mkdir /home/kevin/docker_container/${env.DOCKER_IMAGE} && cd /home/kevin/docker_container/${env.DOCKER_IMAGE}'
                         echo "Répertoire crée."
                     }
                 }
@@ -45,14 +64,14 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t linux_server_jenkins .'
+                    sh 'docker build -t ${env.DOCKER_IMAGE} .'
                 }
             }
         }
         stage('Run Docker Image') {
             steps {
                 script {
-                    sh 'docker run -d -p 8080:80 linux_server_jenkins'
+                    sh 'docker run -d -p 8080:80 ${env.DOCKER_IMAGE}'
                 }
             }
         }
