@@ -1,4 +1,4 @@
-pipeline {
+te pipeline {
     agent any
 
     stages {
@@ -27,21 +27,32 @@ pipeline {
                 }
             }
         }
-        stage('Build Docker Image') {
+        stage('Create path') {
             steps {
                 script {
                     // Construire l'image Docker à partir du Dockerfile
-                    sh 'mkdir /home/kevin/docker_container/linux_server_jenkins && cd /home/kevin/docker_container/linux_server_jenkins && sudo docker build -t mon-image-docker .'
+                    sh 'mkdir /home/kevin/docker_container/linux_server_jenkins && cd /home/kevin/docker_container/linux_server_jenkins'
+                }
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    def result = sh(script: "sudo docker build -t mon-image-docker .", returnStatus: true)
+                    if (result != 0) {
+                    error("Erreur lors de la construction de l'image")
+                    }
                 }
             }
         }
         stage('Run Docker Image') {
             steps {
                 script {
-                    // Construire l'image Docker à partir du Dockerfile
-                    sh 'sudo docker run -d -p 8080:80 linux_server_jenkins'
+                    def result = sh(script: "sudo docker run -d -p 8080:80 linux_server_jenkins", returnStatus: true)
+                    if (result != 0) {
+                    error("Erreur lors du run de l'image")
+                    }
                 }
             }
         }
-    }
 }
