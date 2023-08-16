@@ -51,13 +51,13 @@ pipeline {
     stage('Create path') {
             steps {
                 script {
-                    def directoryExists = sh(script: '[ -d "${path}" ] && echo "true" || echo "false"', returnStdout: true).trim()
+                    def directoryExists = sh(script: '[ -d "${final_path}" ] && echo "true" || echo "false"', returnStdout: true).trim()
 
                     if (directoryExists == "true") {
                         echo "Le répertoire existe déjà. Continuer le build..."
                     } else {
                         echo "Le répertoire n'existe pas. Création..."
-                        sh 'mkdir ${path} && cd ${path}'
+                        sh 'mkdir ${final_path} && cd ${final_path}'
                         echo "Répertoire crée."
                     }
                 }
