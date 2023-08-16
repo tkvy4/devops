@@ -24,11 +24,15 @@ pipeline {
             steps {
                 script {
                     // Supprimez le repo devops Github
-                    sh 'rm -rf /home/kevin/git/devops'
-                    //def result = sh(script: "sudo rm -rf /home/kevin/git/devops", returnStatus: true)
-                    //if (result != 0) {
-                    //error("Erreur lors de la suppression de devops")
-                    //}
+                    //sh 'rm -rf /home/kevin/git/devops'
+
+                    def result = sh(script: 'rm -rf /home/kevin/git/devops', returnStatus: true)
+
+                    if (result == 0) {
+                        echo "Le répertoire a été supprimé avec succès."
+                    } else {
+                        echo "La suppression du répertoire a échoué."
+                    }
                 }
             }
         }
@@ -43,13 +47,13 @@ pipeline {
         stage('Create path') {
             steps {
                 script {
-                    def directoryExists = sh(script: '[ -d "/home/kevin/docker_container/${DOCKER_IMAGE}" ] && echo "true" || echo "false"', returnStdout: true).trim()
+                    def directoryExists = sh(script: '[ -d "/home/kevin/docker_container/${loadedVariables.DOCKER_IMAGE}" ] && echo "true" || echo "false"', returnStdout: true).trim()
 
                     if (directoryExists == "true") {
                         echo "Le répertoire existe déjà. Continuer le build..."
                     } else {
                         echo "Le répertoire n'existe pas. Création..."
-                        sh 'mkdir /home/kevin/docker_container/${DOCKER_IMAGE} && cd /home/kevin/docker_container/${DOCKER_IMAGE}'
+                        sh 'mkdir /home/kevin/docker_container/${loadedVariables.DOCKER_IMAGE} && cd /home/kevin/docker_container/${loadedVariables.DOCKER_IMAGE}'
                         echo "Répertoire crée."
                     }
                 }
@@ -58,14 +62,14 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t ${DOCKER_IMAGE} .'
+                    sh 'docker build -t ${loadedVariables.DOCKER_IMAGE} .'
                 }
             }
         }
         stage('Run Docker Image') {
             steps {
                 script {
-                    sh 'docker run -d -p 8080:80 ${DOCKER_IMAGE}'
+                    sh 'docker run -d -p 8080:80 ${loadedVariables.DOCKER_IMAGE}'
                 }
             }
         }   
