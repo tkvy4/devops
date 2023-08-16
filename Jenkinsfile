@@ -11,7 +11,7 @@ pipeline {
             steps {
                 script {
                     // Récupérez le Dockerfile
-                    sh 'cd /home/kevin/git && sudo rm -rf devops && git clone git@github.com:tkvy4/devops.git'
+                    sh 'echo admin | cd /home/kevin/git && sudo -S rm -rf devops && git clone git@github.com:tkvy4/devops.git'
                 }
             }
         }
