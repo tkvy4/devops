@@ -18,7 +18,7 @@ pipeline {
         stage ('Define variables') {
             steps {
                 script {
-                    def DOCKER_IMAGE = ${loadedVariables.DOCKER_IMAGE}"
+                    def DOCKER_IMAGE = ${loadedVariables.DOCKER_IMAGE}
                     //def autreVariable = ${loadedVariables.AUTRE_VARIABLE}"
                 }
             }
