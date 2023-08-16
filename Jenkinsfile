@@ -23,8 +23,8 @@ pipeline {
                     def variables = evaluate(new GroovyShell().parse(decodedContent))
 
                     // Définir les variables dans le contexte du pipeline
-                    env.DOCKER_IMAGE = variables.DOCKER_IMAGE
-                    env.AUTRE_VARIABLE = variables.AUTRE_VARIABLE
+                    //env.DOCKER_IMAGE = variables.DOCKER_IMAGE
+                    //env.AUTRE_VARIABLE = variables.AUTRE_VARIABLE
                 }
             }
         }
@@ -56,13 +56,13 @@ pipeline {
         stage('Create path') {
             steps {
                 script {
-                    def directoryExists = sh(script: '[ -d "/home/kevin/docker_container/${env.DOCKER_IMAGE}" ] && echo "true" || echo "false"', returnStdout: true).trim()
+                    def directoryExists = sh(script: '[ -d "/home/kevin/docker_container/${DOCKER_IMAGE}" ] && echo "true" || echo "false"', returnStdout: true).trim()
 
                     if (directoryExists == "true") {
                         echo "Le répertoire existe déjà. Continuer le build..."
                     } else {
                         echo "Le répertoire n'existe pas. Création..."
-                        sh 'mkdir /home/kevin/docker_container/${env.DOCKER_IMAGE} && cd /home/kevin/docker_container/${env.DOCKER_IMAGE}'
+                        sh 'mkdir /home/kevin/docker_container/${DOCKER_IMAGE} && cd /home/kevin/docker_container/${DOCKER_IMAGE}'
                         echo "Répertoire crée."
                     }
                 }
@@ -71,14 +71,14 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t ${env.DOCKER_IMAGE} .'
+                    sh 'docker build -t ${DOCKER_IMAGE} .'
                 }
             }
         }
         stage('Run Docker Image') {
             steps {
                 script {
-                    sh 'docker run -d -p 8080:80 ${env.DOCKER_IMAGE}'
+                    sh 'docker run -d -p 8080:80 ${DOCKER_IMAGE}'
                 }
             }
         }
