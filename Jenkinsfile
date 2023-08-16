@@ -9,6 +9,7 @@ pipeline {
                     def githubToken = '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'
 
                     def response = sh(script: "curl -H 'Authorization: Bearer ${githubToken}' ${githubApiUrl}", returnStdout: true).trim()
+                    echo "Réponse de curl : ${response}"
                     //def response = sh(script: "curl -H 'Authorization: token ${githubToken}' ${githubApiUrl}", returnStdout: true).trim()
                     def content = readJSON text: response
 
