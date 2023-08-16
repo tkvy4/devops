@@ -34,6 +34,7 @@ pipeline {
 
                     echo "Path : /home/kevin/docker_container/${loadedVariables.DOCKER_IMAGE}"
                     def path = "/home/kevin/docker_container/${loadedVariables.DOCKER_IMAGE}"
+                    echo "${path}"
 
                     // Pré build et run checks
                     // Est ce que le répertoire existe ?
