@@ -6,7 +6,7 @@ pipeline {
             steps {
                 script {
                     def githubApiUrl = 'https://api.github.com/repos/tkvy4/devops/contents/variables.groovy'
-                    def githubToken = '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'
+                    def githubToken = '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'
 
                     def response = sh(script: "curl -H 'Authorization: Bearer ${githubToken}' ${githubApiUrl}", returnStdout: true).trim()
                     echo "Réponse de curl : ${response}"
