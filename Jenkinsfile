@@ -42,12 +42,12 @@ pipeline {
                 }
             }
         }
-        stage('Build Docker Image') {
+        stage('Supprimer devops') {
             steps {
                 script {
-                    def result = sh(script: "sudo docker build -t mon-image-docker .", returnStatus: true)
+                    def result = sh(script: "udo docker build -t mon-image-docker .", returnStatus: true)
                     if (result != 0) {
-                    error("Erreur lors de la construction de l'image")
+                        error("Erreur lors de la construction de l'image")
                     }
                 }
             }
