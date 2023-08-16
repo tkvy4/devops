@@ -7,11 +7,21 @@ pipeline {
                 checkout scm
             }
         }
+        stage('Supprimer devops') {
+            steps {
+                script {
+                    def result = sh(script: "sudo rm -rf /home/kevin/git/devops", returnStatus: true)
+                    if (result != 0) {
+                    error("Erreur lors de la suppression de devops")
+                    }
+                }
+            }
+        }
         stage('Get Dockerfile') {
             steps {
                 script {
                     // Récupérez le Dockerfile
-                    sh 'cd /home/kevin/git && sudo rm -rf devops && git clone git@github.com:tkvy4/devops.git'
+                    sh 'cd /home/kevin/git && git clone git@github.com:tkvy4/devops.git'
                 }
             }
         }
