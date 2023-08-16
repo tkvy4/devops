@@ -69,7 +69,7 @@ pipeline {
         stage('Run Docker Image') {
             steps {
                 script {
-                    sh 'docker run -d -p 8080:80 '${loadedVariables.DOCKER_IMAGE}''
+                    sh 'docker run -d -p 8081:80 '${loadedVariables.DOCKER_IMAGE}''
                 }
             }
         }   
