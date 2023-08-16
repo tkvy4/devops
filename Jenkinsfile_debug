@@ -20,5 +20,21 @@ pipeline {
                 checkout scm
             }
         }
+    stage('Supprimer devops') {
+            steps {
+                script {
+                    // Supprimez le repo devops Github
+                    //sh 'rm -rf /home/kevin/git/devops'
+
+                    def result = sh(script: 'rm -rf /home/kevin/git/devops', returnStatus: true)
+
+                    if (result == 0) {
+                        echo "Le répertoire a été supprimé avec succès."
+                    } else {
+                        echo "La suppression du répertoire a échoué."
+                    }
+                }
+            }
+        }
     }
 }
