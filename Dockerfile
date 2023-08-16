@@ -6,15 +6,15 @@ ARG jira=true
 ARG confluence=true
 ARG bitbucket=false
 
-// Utilisation de la variable dans l'environnement de construction
+# Utilisation de la variable dans l'environnement de construction
 ENV JIRA=$jira
 ENV CONFLUENCE=$confluence
 ENV BITBUCKET=$bitbucket
 
-// Définit la variable d'environnement DEBIAN_FRONTEND sur noninteractive
+# Définit la variable d'environnement DEBIAN_FRONTEND sur noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
 
-// Mettez à jour les packages et installez des outils supplémentaires
+# Mettez à jour les packages et installez des outils supplémentaires
 RUN apt-get update && \
     apt-get install -y openssh-server openssh-client apache2 postgresql sudo net-tools && \
     rm -rf /var/lib/apt/lists/*
