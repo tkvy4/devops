@@ -51,8 +51,8 @@ pipeline {
 
                     // Copiez le Dockerfile
                     sh "cp /home/kevin/git/devops/Dockerfile ${path}"
-                    sh 'docker build -t ${loadedVariables.DOCKER_IMAGE} .'
-                    sh 'docker run -d -p 8080:80 ${loadedVariables.DOCKER_IMAGE}'
+                    sh "docker build -t ${loadedVariables.DOCKER_IMAGE} ."
+                    sh "docker run -d -p 8080:80 ${loadedVariables.DOCKER_IMAGE}"
                     }
                 }
             }
