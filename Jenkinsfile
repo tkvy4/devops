@@ -10,7 +10,7 @@ pipeline {
 
                     // Utiliser les variables chargées
                     echo "Une autre variable : ${loadedVariables.DOCKER_IMAGE}"
-                    echo "Encore une autre variable : ${loadedVariables.ENCORE_AUTRE_VARIABLE}"
+                    echo "Encore une autre variable : ${loadedVariables.AUTRE_VARIABLE}"
                 }
             }
         }
