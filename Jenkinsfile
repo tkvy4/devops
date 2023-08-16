@@ -11,7 +11,7 @@ pipeline {
                     // Utiliser les variables chargées
                     echo "Docker image : ${loadedVariables.DOCKER_IMAGE}"
                     //echo "Encore une autre variable : ${loadedVariables.AUTRE_VARIABLE}"
-                    echo "Path : /home/kevin/docker_container/${loadedVariables.DOCKER_IMAGE}"
+                    echo "Path : /home/kevin/docker_container/'${loadedVariables.DOCKER_IMAGE}'"
                 }
             }
         }
