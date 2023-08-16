@@ -1,3 +1,5 @@
 // variables.groovy
-DOCKER_IMAGE = 'linux_server_jenkins'
-AUTRE_VARIABLE = 'autre_valeur'
+return [
+    DOCKER_IMAGE = 'linux_server_jenkins',
+    AUTRE_VARIABLE = 'autre_valeur'
+]
