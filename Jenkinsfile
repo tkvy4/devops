@@ -11,7 +11,10 @@ pipeline {
                     def response = sh(script: "curl -H 'Authorization: token ${githubToken}' ${githubApiUrl}", returnStdout: true).trim()
                     def content = readJSON text: response
 
-                    def variables = evaluate(new GroovyShell().parse(new String(Base64.decodeBase64(content.content))))
+                    def downloadUrl = content.download_url
+                    def decodedContent = sh(script: "curl -s ${downloadUrl} | base64 -d", returnStdout: true).trim()
+
+                    def variables = evaluate(new GroovyShell().parse(decodedContent))
 
                     // Définir les variables dans le contexte du pipeline
                     env.DOCKER_IMAGE = variables.DOCKER_IMAGE
