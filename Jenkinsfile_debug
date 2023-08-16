@@ -63,5 +63,19 @@ pipeline {
                 }
             }
         }
+    stage('Build Docker Image') {
+            steps {
+                script {
+                    sh 'docker build -t ${final_path} .'
+                }
+            }
+        }
+        stage('Run Docker Image') {
+            steps {
+                script {
+                    sh 'docker run -d -p 8080:80 ${final_path}'
+                }
+            }
+        }
     }
 }
