@@ -12,8 +12,10 @@ pipeline {
                     echo "Docker image : ${loadedVariables.DOCKER_IMAGE}"
                     //echo "Encore une autre variable : ${loadedVariables.AUTRE_VARIABLE}"
                     
-                    def path = '/home/kevin/docker_container/'+${loadedVariables.DOCKER_IMAGE}
-                    echo "${path}"
+                    def path = '/home/kevin/docker_container/'
+                    def docker = '${loadedVariables.DOCKER_IMAGE}'
+                    def final_path = path + docker
+                    echo "${final_path}"
                 }
             }
         }
