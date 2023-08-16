@@ -9,8 +9,9 @@ pipeline {
                     def loadedVariables = load 'variables.groovy'
 
                     // Utiliser les variables chargées
-                    echo "Une autre variable : ${loadedVariables.DOCKER_IMAGE}"
-                    echo "Encore une autre variable : ${loadedVariables.AUTRE_VARIABLE}"
+                    echo "Docker image : ${loadedVariables.DOCKER_IMAGE}"
+                    //echo "Encore une autre variable : ${loadedVariables.AUTRE_VARIABLE}"
+                    echo "Path : /home/kevin/docker_container/${loadedVariables.DOCKER_IMAGE}"
                 }
             }
         }
