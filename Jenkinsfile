@@ -20,11 +20,14 @@ pipeline {
                     // Charger le contenu décodé du fichier variables.groovy
                     loadScript text: decodedContent
 
-                    def variables = evaluate(new GroovyShell().parse(decodedContent))
+                    //def variables = evaluate(new GroovyShell().parse(decodedContent))
 
                     // Définir les variables dans le contexte du pipeline
                     //env.DOCKER_IMAGE = variables.DOCKER_IMAGE
                     //env.AUTRE_VARIABLE = variables.AUTRE_VARIABLE
+
+                    echo "Ma variable : ${DOCKER_IMAGE}"
+                    echo "Autre variable : ${AUTRE_VARIABLE}"
                 }
             }
         }
