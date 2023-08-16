@@ -8,9 +8,10 @@ pipeline {
                     def githubApiUrl = 'https://api.github.com/repos/tkvy4/devops/contents/variables.groovy'
                     def githubToken = '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'
 
-                    def response = sh(script: "curl -H 'Authorization: Bearer ${githubToken}' ${githubApiUrl}", returnStdout: true).trim()
+                    //def response = sh(script: "curl -H 'Authorization: Bearer ${githubToken}' ${githubApiUrl}", returnStdout: true).trim()
+                    def response = sh(script: "curl -H 'Authorization: token ${githubToken}' ${githubApiUrl}", returnStdout: true).trim()
                     echo "Réponse de curl : ${response}"
-                    //def response = sh(script: "curl -H 'Authorization: token ${githubToken}' ${githubApiUrl}", returnStdout: true).trim()
+                    
                     def content = readJSON text: response
 
                     def downloadUrl = content.download_url
