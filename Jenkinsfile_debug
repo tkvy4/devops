@@ -1,25 +1,21 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_IMAGE = null // Initialiser la variable
-    }
-
     stages {
-        stage('Load Variables') {
-            steps {
-                script {
+        //stage('Load Variables') {
+        //    steps {
+        //        script {
                     // Charger les variables depuis autre_variables.groovy dans le même répertoire
-                    def loadedVariables = load 'variables.groovy'
+        //            def loadedVariables = load 'variables.groovy'
 
                     // Définir la variable d'environnement pour une utilisation dans tous les blocs stage
-                    DOCKER_IMAGE = loadedVariables.DOCKER_IMAGE
+       //             DOCKER_IMAGE = loadedVariables.DOCKER_IMAGE
                     
                     //echo "Encore une autre variable : ${loadedVariables.AUTRE_VARIABLE}"
                     
-                }
-            }
-        }
+       //         }
+       //     }
+       // }
     stage('Checkout') {
             steps {
                 checkout scm
@@ -52,10 +48,13 @@ pipeline {
     stage('Create path') {
             steps {
                 script {
-                    def path = '/home/kevin/docker_container/'
-                    def docker = env.DOCKER_IMAGE
-                    def final_path = path + docker
-                    echo "Chemin final : ${final_path}"
+                    // Charger les variables depuis autre_variables.groovy dans le même répertoire
+                    def loadedVariables = load 'variables.groovy'
+
+                    // Définir la variable d'environnement pour une utilisation dans tous les blocs stage
+                    DOCKER_IMAGE = loadedVariables.DOCKER_IMAGE
+
+                    echo "Path : /home/kevin/docker_container/${loadedVariables.DOCKER_IMAGE}"
                     
                     def directoryExists = sh(script: '[ -d ${final_path} ] && echo "true" || echo "false"', returnStdout: true).trim()
 
