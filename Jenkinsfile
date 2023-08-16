@@ -31,7 +31,7 @@ pipeline {
             steps {
                 script {
                     // Construire l'image Docker à partir du Dockerfile
-                    sh 'cd /home/kevin/docker_container and mkdir linux_server_jenkins && cd linux_server_jenkins && sudo docker build -t mon-image-docker .'
+                    sh 'mkdir /home/kevin/docker_container/linux_server_jenkins && cd /home/kevin/docker_container/linux_server_jenkins && sudo docker build -t mon-image-docker .'
                 }
             }
         }
