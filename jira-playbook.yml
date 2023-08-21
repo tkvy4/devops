@@ -1,0 +1,33 @@
+---
+- name: Installer et configurer le conteneur
+  hosts: all
+  become: true
+  tasks:
+
+    - name: Charger les variables
+      include_vars:
+        file: jira.yml
+        
+    - name: Installer SSH
+      apt:
+        name: openssh-server
+        state: present
+
+    - name: Installer PostgreSQL
+      apt:
+        name: postgresql
+        state: present
+
+    - name: Installer Apache
+      package:
+        name: apache2  # Pour les distributions basées sur Debian (comme Ubuntu)
+        state: present
+      when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
+      
+    - name: Créer un utilisateur
+      user:
+        name: jira
+        state: present
+
+    - name: Télécharger l'archive Jira
+      command: sudo wget https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-{{ jira_version }}.tar.gz /atlassian/tmp/
