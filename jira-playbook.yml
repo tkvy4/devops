@@ -1,6 +1,8 @@
 ---
 - name: Installer et configurer le conteneur
   hosts: all
+  vars:
+    ansible_python_interpreter: /usr/bin/python2
   become: true
   tasks:
 
@@ -15,7 +17,7 @@
 
     - name: Installer PostgreSQL
       apt:
-        name: postgresql
+        name: postgresql12
         state: present
 
     - name: Installer Apache
