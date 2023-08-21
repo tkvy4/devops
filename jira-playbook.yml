@@ -30,4 +30,4 @@
         state: present
 
     - name: Télécharger l'archive Jira
-      command: sudo wget https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-{{ jira_version }}.tar.gz /atlassian/tmp/
+      command: wget https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-{{ jira_version }}.tar.gz /atlassian/tmp/
