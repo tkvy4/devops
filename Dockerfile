@@ -5,7 +5,7 @@ FROM ubuntu:latest
 RUN apt-get update && \
     apt-get install -y sudo && \
     rm -rf /var/lib/apt/lists/*
-
+    
 # Exposez les ports nécessaires
 EXPOSE 80
 EXPOSE 443
