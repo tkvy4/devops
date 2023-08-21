@@ -54,7 +54,7 @@ pipeline {
                     
                     // Build and run the container
                     sh "docker build -t ${loadedVariables.DOCKER_IMAGE} ."
-                    sh "docker run -d -p 8081:80 --name ${loadedVariables.DOCKER_IMAGE}"
+                    sh "docker run -d --name ${loadedVariables.DOCKER_IMAGE} -p 8081:80 ${loadedVariables.DOCKER_IMAGE}"
                     }
                 }
             }
