@@ -7,25 +7,20 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Clear existing devops cloned repo') {
+            stage('Get files from Github') {
             steps {
                 script {
+                    // Delete existing data and clone again
                     def result = sh(script: 'rm -rf /home/kevin/git/devops', returnStatus: true)
 
                     if (result == 0) {
-                        echo "Directory deleted successfully."
+                        echo "Deleting devops...Success."
+                        sh 'cd /home/kevin/git && git clone git@github.com:tkvy4/devops.git'
+                        echo "Cloning into 'devops'...Success."
                     } else {
-                        echo "Directory deletion failed."
+                        echo "Deleting...Fail."
                         }
                     }
-                }
-            }
-        stage('Clone devops repo') {
-            steps {
-                script {
-                    // Clone repository
-                    sh 'cd /home/kevin/git && git clone git@github.com:tkvy4/devops.git'
-                     }
                 }
             }
         stage('Build and run the container') {
