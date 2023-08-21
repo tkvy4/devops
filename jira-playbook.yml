@@ -2,7 +2,7 @@
 - name: Installer et configurer le conteneur
   hosts: all
   vars:
-    ansible_python_interpreter: /usr/bin/python2
+    ansible_python_interpreter: /usr/bin/python3
   become: true
   tasks:
 
@@ -15,9 +15,12 @@
         name: openssh-server
         state: present
 
-    - name: Installer PostgreSQL
+    - name: Installer PostgreSQL 12 et les dépendances
       apt:
-        name: postgresql12
+        name: 
+          - postgresql-{{ psql_version }}
+          - postgresql-client-{{ psql_version }}
+          - postgresql-contrib-{{ psql_version }}
         state: present
 
     - name: Installer Apache
