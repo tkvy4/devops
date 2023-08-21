@@ -58,5 +58,11 @@ pipeline {
                     }
                 }
             }
+        stage('Exécution d\'Ansible') {
+            steps {
+                // Exécuter le script Ansible ici
+                sh 'ansible-playbook -i /home/kevin/git/devops/inventory.yml /home/kevin/git/devops/playbook.yml'
+            }
+        }
         }
 }
