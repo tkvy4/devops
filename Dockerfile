@@ -3,7 +3,7 @@ FROM ubuntu:latest
 
 # Mettez à jour les packages et installez des outils supplémentaires
 RUN apt-get update && \
-    apt-get install -y && \
+    apt-get install -y sudo && \
     rm -rf /var/lib/apt/lists/*
 
 # Exposez les ports nécessaires
