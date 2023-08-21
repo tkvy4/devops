@@ -1,6 +1,6 @@
 ---
 - name: Installer et configurer le conteneur
-  hosts: jira_jenkins
+  hosts: all
   become: true
   tasks:
 
