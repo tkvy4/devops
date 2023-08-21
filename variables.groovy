@@ -1,5 +1,5 @@
 // autre_variables.groovy
 return [
-  DOCKER_IMAGE: 'linux_server_jenkins',
+  DOCKER_IMAGE: 'jira_jenkins',
   AUTRE_VARIABLE: 'valeur_encore_autre_variable',
 ]
