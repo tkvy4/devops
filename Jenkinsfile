@@ -57,18 +57,22 @@ pipeline {
                     sh "docker build -t ${loadedVariables.DOCKER_IMAGE} ."
                     sh "docker run -d --name ${loadedVariables.DOCKER_IMAGE} -p 8081:80 ${loadedVariables.DOCKER_IMAGE}"
 
-                    // Edit inventory.ini
-                    sh 'echo "" > /home/kevin/git/devops/inventory.ini'
-                    sh "echo '[conteneurs]' >> /home/kevin/git/devops/inventory.ini"
-                    sh "echo ${loadedVariables.DOCKER_IMAGE} ansible_connection=docker >> /home/kevin/git/devops/inventory.ini"
                     }
                 }
             }
         stage('Exécution d\'Ansible') {
-            steps {          
+            steps {
+                // Load variables from variables.groovy in Github repo
+                def loadedVariables = load 'variables.groovy'
+ 
+                // Edit inventory.ini
+                sh 'echo "" > /home/kevin/git/devops/inventory.ini'
+                sh "echo '[conteneurs]' >> /home/kevin/git/devops/inventory.ini"
+                sh "echo ${loadedVariables.DOCKER_IMAGE} ansible_connection=docker >> /home/kevin/git/devops/inventory.ini"
+                
                 // Exécuter le script Ansible ici
                 sh 'ansible-playbook -i /home/kevin/git/devops/inventory.ini /home/kevin/git/devops/jira-playbook.yml'
-            }
+                }
         }
         }
 }
