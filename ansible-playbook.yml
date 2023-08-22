@@ -1,9 +1,0 @@
----
-- name: Supprimer un répertoire s'il existe
-  hosts: votre_hôte
-  tasks:
-    - name: Supprimer le répertoire
-      file:
-        path: /home/kevin/git/devops
-        state: absent
-      ignore_errors: yes

@@ -1,0 +1,70 @@
+---
+- name: Récupérer les fichiers sur Git
+  hosts: localhost
+  tasks:
+    - name: Supprimer le répertoire
+      file:
+        path: /home/kevin/git/devops
+        state: absent
+
+    - name: Cloner le dépôt Git
+      git:
+        repo: git@github.com:tkvy4/devops.git
+        dest: /home/kevin/git/devops/
+        version: main
+        force: yes
+
+- name: Build et run le conteneur Docker
+  hosts: localhost
+  become: true
+
+  tasks:
+    - name: Charger les variables
+      include_vars:
+        file: jira.yml
+      tags: variables
+
+    - name: Vérifier si le répertoire existe
+      stat:
+        path: /home/kevin/docker_container/{{ my_host }}
+      register: dir_status
+
+    - name: Créer le répertoire s'il n'existe pas
+      file:
+        path: /home/kevin/docker_container/{{ my_host }}
+        state: directory
+      when: not dir_status.stat.exists
+
+    - name: Copier le Dockerfile
+      copy:
+        src: /home/kevin/git/devops/Dockerfile
+        dest: /home/kevin/docker_container/{{ my_host }}
+        owner: jenkins
+        group: jenkins
+        mode: "0644"
+
+    - name: Stop le conteneur s'il est démarré
+      docker_container:
+        name: "{{ my_host }}"
+        state: stopped
+      ignore_errors: yes
+
+    - name: Supprimer le conteneur s'il existe
+      docker_container:
+        name: "{{ my_host }}"
+        state: absent
+      ignore_errors: yes
+    
+    - name: Construire une nouvelle image Docker
+      docker_image:
+        name: "{{ my_host }}"
+        path: /home/kevin/docker_container/{{ my_host }}/Dockerfile
+        state: build
+
+    - name: Run un nouveau conteneur Docker
+      docker_container:
+        name: "{{ my_host }}"
+        image: "{{ my_host }}"
+        ports:
+          - "{{ port }}:80"
+        state: started
