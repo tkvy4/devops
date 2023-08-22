@@ -80,4 +80,4 @@
         state: present
 
     - name: Télécharger l'archive Jira
-      command: wget -P /atlassian/tmp https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-{{ jira_version }}.tar.gz
+      command: wget warn=False -P /atlassian/tmp https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-{{ jira_version }}.tar.gz
