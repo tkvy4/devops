@@ -4,22 +4,21 @@
   vars:
     ansible_python_interpreter: /usr/bin/python3
   become: true
+  
   tasks:
 
-    # playbook.yml
     - name: Charger les variables
       include_vars:
         file: jira.yml
       tags: variables
-           
+
     - name: Add PostgreSQL 12 repository
       shell: curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
       shell: echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" | sudo tee  /etc/apt/sources.list.d/pgdg.list
-      become: yes
 
     - name: Mettre a jour les paquets
       command: sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7FCC7D46ACCC4CF8
-      command: apt-get update
+      command: apt update
       
     - name: Installer PostgreSQL 12 et les dépendances
       apt:
@@ -29,21 +28,30 @@
           - postgresql-contrib-{{ psql_version }}
         state: present
 
+    - name: Start PostgreSQL service
+       command: service postgresql start
+
     - name: Installer SSH
       apt:
         name: openssh-server
         state: present
-   
+
+   - name: Start SSH service
+       command: service ssh start
+       
     - name: Installer Apache
       package:
         name: apache2  # Pour les distributions basées sur Debian (comme Ubuntu)
         state: present
       when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
-      
+
+    - name: Start Apache2 service
+       command: service apache2 start
+       
     - name: Créer un utilisateur
       user:
         name: jira
         state: present
 
     - name: Télécharger l'archive Jira
-      command: wget https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-{{ jira_version }}.tar.gz /atlassian/tmp/
+      command: wget -P /atlassian/tmp https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-{{ jira_version }}.tar.gz
