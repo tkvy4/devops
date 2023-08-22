@@ -18,6 +18,7 @@
       become: yes
 
     - name: Mettre a jour les paquets
+      command: sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7FCC7D46ACCC4CF8
       command: apt-get update
       
     - name: Installer PostgreSQL 12 et les dépendances
