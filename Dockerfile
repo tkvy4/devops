@@ -6,7 +6,9 @@ RUN apt-get update && \
     apt install -y software-properties-common && \
     add-apt-repository -y ppa:deadsnakes/ppa && \
     apt-get install -y curl python2.7 sudo && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get update
+    
 # Python install source : 
 # https://linuxize.com/post/how-to-install-python-3-9-on-ubuntu-20-04/
     
