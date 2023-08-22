@@ -17,10 +17,6 @@
         path: /home/kevin/git/devops/inventory.ini
         line: "{{ my_host }} ansible_connection=docker"
       tags: inventory
-      
-      - name: Charger les variables
-      include_vars:
-        file: jira.yml
         
     - name: Installer SSH
       apt:
