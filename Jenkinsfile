@@ -61,6 +61,9 @@ pipeline {
             }
         stage('Exécution d\'Ansible') {
             steps {
+                // Edit inventory.ini
+                sh "echo -e '[conteneurs]\n${loadedVariables.DOCKER_IMAGE} ansible_connection=docker' >> /home/kevin/git/devops/inventory.ini"
+                
                 // Exécuter le script Ansible ici
                 sh 'ansible-playbook -i /home/kevin/git/devops/inventory.ini /home/kevin/git/devops/jira-playbook.yml'
             }
