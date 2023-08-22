@@ -62,17 +62,18 @@ pipeline {
             }
         stage('Exécution d\'Ansible') {
             steps {
-                // Load variables from variables.groovy in Github repo
-                def loadedVariables = load 'variables.groovy'
+                script {
+                    // Load variables from variables.groovy in Github repo
+                    def loadedVariables = load 'variables.groovy'
  
-                // Edit inventory.ini
-                sh 'echo "" > /home/kevin/git/devops/inventory.ini'
-                sh "echo '[conteneurs]' >> /home/kevin/git/devops/inventory.ini"
-                sh "echo ${loadedVariables.DOCKER_IMAGE} ansible_connection=docker >> /home/kevin/git/devops/inventory.ini"
+                    // Edit inventory.ini
+                    sh 'echo "" > /home/kevin/git/devops/inventory.ini'
+                    sh "echo '[conteneurs]' >> /home/kevin/git/devops/inventory.ini"
+                    sh "echo ${loadedVariables.DOCKER_IMAGE} ansible_connection=docker >> /home/kevin/git/devops/inventory.ini"
                 
-                // Exécuter le script Ansible ici
-                sh 'ansible-playbook -i /home/kevin/git/devops/inventory.ini /home/kevin/git/devops/jira-playbook.yml'
-                }
-        }
+                    // Exécuter le script Ansible ici
+                    sh 'ansible-playbook -i /home/kevin/git/devops/inventory.ini /home/kevin/git/devops/jira-playbook.yml'
+                    }
+              }
         }
 }
