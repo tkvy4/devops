@@ -48,10 +48,10 @@ pipeline {
                     sh "cp /home/kevin/git/devops/Dockerfile ${path}/"
                     
                     // Stop Docker container if running
-                    sh "docker stop ${loadedVariables.DOCKER_IMAGE} || true"
+                    sh "docker stop ${loadedVariables.DOCKER_IMAGE}"
 
                     // Delete Docker container if existing
-                    sh "docker rm -f ${loadedVariables.DOCKER_IMAGE} || true"
+                    sh "docker rm -f ${loadedVariables.DOCKER_IMAGE}"
                     
                     // Build and run the container
                     sh "docker build -t ${loadedVariables.DOCKER_IMAGE} ."
