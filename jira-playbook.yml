@@ -4,7 +4,7 @@
   vars:
     ansible_python_interpreter: /usr/bin/python3
   become: true
-  
+
   tasks:
 
     - name: Charger les variables
@@ -12,20 +12,37 @@
         file: jira.yml
       tags: variables
 
-    #- name: Add PostgreSQL 12 repository
-    #  shell: curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
-    #  shell: echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" | sudo tee  /etc/apt/sources.list.d/pgdg.list
+    - name: Import PostgreSQL GPG key
+      apt_key:
+        keyserver: keyserver.ubuntu.com
+        id: 7FCC7D46ACCC4CF8
+        state: present
 
-    #- name: Mettre a jour les paquets
-    #  command: sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7FCC7D46ACCC4CF8
-    #  command: apt update
-      
+    - name: Ajouter le référentiel PostgreSQL
+      become: yes
+      apt_repository:
+        repo: "deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release }}-pgdg main"
+        state: present
+      register: apt_repository_result
+
+    - name: Importer la clé GPG pour le référentiel PostgreSQL
+      become: yes
+      apt_key:
+        url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+        state: present
+      when: apt_repository_result.changed
+
+    - name: Mettre à jour la liste des paquets
+      become: yes
+      apt:
+        update_cache: yes
+
     - name: Installer PostgreSQL {{ psql_version }} et les dépendances
       apt:
-        name: 
+        name:
           - postgresql-{{ psql_version }}
-          - postgresql-client-{{ psql_version }}
-          - postgresql-contrib-{{ psql_version }}
+          #- postgresql-client-{{ psql_version }}
+          #- postgresql-contrib-{{ psql_version }}
         state: present
 
     - name: Activez le service PostgreSQL au démarrage
@@ -44,7 +61,7 @@
         name: ssh
         enabled: yes
         state: started
-       
+
     - name: Installer Apache
       package:
         name: apache2  # Pour les distributions basées sur Debian (comme Ubuntu)
@@ -53,10 +70,10 @@
 
     - name: Activez le service Apache au démarrage
       service:
-        name: httpd
+        name: apache2
         enabled: yes
         state: started
-       
+
     - name: Créer un utilisateur
       user:
         name: jira
