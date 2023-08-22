@@ -20,7 +20,7 @@
     #  command: sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7FCC7D46ACCC4CF8
     #  command: apt update
       
-    - name: Installer PostgreSQL 12 et les dépendances
+    - name: Installer PostgreSQL {{ psql_version }} et les dépendances
       apt:
         name: 
           - postgresql-{{ psql_version }}
