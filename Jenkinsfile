@@ -56,14 +56,14 @@ pipeline {
                     // Build and run the container
                     sh "docker build -t ${loadedVariables.DOCKER_IMAGE} ."
                     sh "docker run -d --name ${loadedVariables.DOCKER_IMAGE} -p 8081:80 ${loadedVariables.DOCKER_IMAGE}"
+
+                    // Edit inventory.ini
+                    sh "echo -e '[conteneurs]\n${loadedVariables.DOCKER_IMAGE} ansible_connection=docker' >> /home/kevin/git/devops/inventory.ini"
                     }
                 }
             }
         stage('Exécution d\'Ansible') {
-            steps {
-                // Edit inventory.ini
-                sh "echo -e '[conteneurs]\n${loadedVariables.DOCKER_IMAGE} ansible_connection=docker' >> /home/kevin/git/devops/inventory.ini"
-                
+            steps {          
                 // Exécuter le script Ansible ici
                 sh 'ansible-playbook -i /home/kevin/git/devops/inventory.ini /home/kevin/git/devops/jira-playbook.yml'
             }
