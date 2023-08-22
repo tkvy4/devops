@@ -59,7 +59,8 @@ pipeline {
 
                     // Edit inventory.ini
                     sh 'echo "" > /home/kevin/git/devops/inventory.ini'
-                    sh "echo -e '[conteneurs]\n${loadedVariables.DOCKER_IMAGE} ansible_connection=docker' >> /home/kevin/git/devops/inventory.ini"
+                    sh "echo '[conteneurs]' >> /home/kevin/git/devops/inventory.ini"
+                    sh "${loadedVariables.DOCKER_IMAGE} ansible_connection=docker"
                     }
                 }
             }
