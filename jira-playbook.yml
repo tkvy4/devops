@@ -39,7 +39,7 @@
         name: openssh-server
         state: present
 
-   - name: Activez le service SSH au démarrage
+    - name: Activez le service SSH au démarrage
       service:
         name: ssh
         enabled: yes
