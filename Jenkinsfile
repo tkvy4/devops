@@ -74,6 +74,7 @@ pipeline {
                     // Exécuter le script Ansible ici
                     sh 'ansible-playbook -i /home/kevin/git/devops/inventory.ini /home/kevin/git/devops/jira-playbook.yml'
                     }
-              }
+            }
         }
+    }
 }
