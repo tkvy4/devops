@@ -58,7 +58,7 @@ pipeline {
                     sh "docker run -d --name ${loadedVariables.DOCKER_IMAGE} -p 8081:80 ${loadedVariables.DOCKER_IMAGE}"
 
                     // Edit inventory.ini
-                    sh 'echo "" > /home/kevin/git/devops/inventory.ini"
+                    sh 'echo "" > /home/kevin/git/devops/inventory.ini'
                     sh "echo -e '[conteneurs]\n${loadedVariables.DOCKER_IMAGE} ansible_connection=docker' >> /home/kevin/git/devops/inventory.ini"
                     }
                 }
