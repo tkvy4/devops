@@ -29,7 +29,7 @@
         state: present
 
     - name: Start PostgreSQL service
-       command: service postgresql start
+       shell: service postgresql start
 
     - name: Installer SSH
       apt:
@@ -37,7 +37,7 @@
         state: present
 
    - name: Start SSH service
-       command: service ssh start
+       shell: service ssh start
        
     - name: Installer Apache
       package:
@@ -46,7 +46,7 @@
       when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
 
     - name: Start Apache2 service
-       command: service apache2 start
+       shell: service apache2 start
        
     - name: Créer un utilisateur
       user:
