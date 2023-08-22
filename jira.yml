@@ -2,3 +2,4 @@
 my_host: "jira_jenkins"
 jira_version: "8.20.25"
 psql_version: 12
+port: "8081"
