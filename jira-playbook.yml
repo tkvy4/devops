@@ -1,6 +1,6 @@
 ---
 - name: Installer et configurer le conteneur
-  hosts: {{ my_host }}
+  hosts: all
   vars:
     ansible_python_interpreter: /usr/bin/python3
   become: true
