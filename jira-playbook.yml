@@ -11,18 +11,16 @@
       include_vars:
         file: jira.yml
       tags: variables
-        
-    - name: Installer SSH
-      apt:
-        name: openssh-server
-        state: present
-        
+           
     - name: Add PostgreSQL 12 repository
       shell: curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /etc/apt/trusted.gpg.d/postgresql.gpg
       shell: echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" | sudo tee  /etc/apt/sources.list.d/pgdg.list
-      shell: apt-get update
       become: yes
 
+    - name: Mettre à jour les paquets
+      apt:
+        update_cache: yes
+    
     - name: Installer PostgreSQL 12 et les dépendances
       apt:
         name: 
@@ -31,6 +29,11 @@
           - postgresql-contrib-{{ psql_version }}
         state: present
 
+    - name: Installer SSH
+      apt:
+        name: openssh-server
+        state: present
+   
     - name: Installer Apache
       package:
         name: apache2  # Pour les distributions basées sur Debian (comme Ubuntu)
