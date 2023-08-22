@@ -1,6 +1,6 @@
 ---
 - name: Installer et configurer le conteneur
-  hosts: all
+  hosts: {{ my_host }}
   vars:
     ansible_python_interpreter: /usr/bin/python3
   become: true
@@ -11,12 +11,6 @@
       include_vars:
         file: jira.yml
       tags: variables
-      
-    - name: Créer l'inventaire avec la variable chargée
-      lineinfile:
-        path: /home/kevin/git/devops/inventory.ini
-        line: "{{ my_host }} ansible_connection=docker"
-      tags: inventory
         
     - name: Installer SSH
       apt:
