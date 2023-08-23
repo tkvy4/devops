@@ -73,11 +73,3 @@
         name: apache2
         enabled: yes
         state: started
-
-    - name: Créer un utilisateur
-      user:
-        name: jira
-        state: present
-
-    - name: Télécharger l'archive Jira
-      command: wget warn=False -P /atlassian/tmp https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-{{ jira_version }}.tar.gz
