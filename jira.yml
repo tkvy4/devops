@@ -4,3 +4,5 @@ jira_version: "8.20.25"
 psql_version: 12
 port: "8081"
 domain_name: "kevin-jira.godzilla.com"
+jvm_minimum_memory: "2048m"
+jvm_maximum_memory: "2048m"
