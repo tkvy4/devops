@@ -1,0 +1,70 @@
+---
+- name: Installer Jira
+  hosts: all
+  tasks:
+
+  - name: Charger les variables
+    include_vars:
+      file: jira.yml
+    tags: variables
+
+  - name: Vérifier si le fichier existe
+    stat:
+      path: "/atlassian/tmp/atlassian-jira-software-{{ jira_version }}.tar.gz"
+    register: archive_file
+
+  - name: Télécharger l'archive Jira
+    command: wget warn=False -P /atlassian/tmp https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-{{ jira_version }}.tar.gz
+    when: not archive_file.stat.exists
+
+  - name: Créer un utilisateur
+    user:
+      name: jira
+      state: present
+
+  - name: Créer jira-home
+    file:
+      path: /atlassian/jira/data
+      state: directory
+      force: no
+
+  - name: Créer jira-install
+    file:
+      path: /atlassian/jira/application
+      state: directory
+      force: no
+
+  - name: Décompresser l'archive
+    command: tar -xzvf /atlassian/tmp/atlassian-jira-software-8.20.25.tar.gz -C /atlassian/jira/application/
+
+  - name: Mettre a jour le jira-home
+    lineinfile:
+      path: /atlassian/jira/application/atlassian-jira-software-{{ jira_version }}-standalone/atlassian-jira/WEB-INF/classes/jira-application.properties
+      regexp: 'jira.home =$'
+      line: 'jira.home = /atlassian/jira/data'
+
+  - name: Mettre a jour server.xml
+    lineinfile:
+      path: /atlassian/jira/application/atlassian-jira-software-{{ jira_version }}-standalone/conf/server.xml
+      insertafter: '.*redirectPort="8443".*'
+      line: '                   scheme="https" secure="true" proxyName="{{ domain_name }}" proxyPort="443"'
+      # 19 blank spaces
+
+  # Pas necessaire dans un use case 'normal', Jira devrait toujours utiliser le port 8080
+  - name: Mettre a jour connector port server.xml
+    replace:
+      path: /atlassian/jira/application/atlassian-jira-software-{{ jira_version }}-standalone/conf/server.xml
+      regexp: 'port="8080"'
+      replace: 'port="{{ port }}"'
+
+  - name: Mettre a jour JVM_MIN setenv.sh
+    lineinfile:
+      path: /atlassian/jira/application/atlassian-jira-software-{{ jira_version }}-standalone/bin/setenv.sh
+      regexp: '^JVM_MINIMUM_MEMORY='
+      line: 'JVM_MINIMUM_MEMORY="{{ jvm_minimum_memory }}"'
+
+  - name: Mettre a jour JVM_MAX setenv.sh
+    lineinfile:
+      path: /atlassian/jira/application/atlassian-jira-software-{{ jira_version }}-standalone/bin/setenv.sh
+      regexp: '^JVM_MAXIMUM_MEMORY='
+      line: 'JVM_MAXIMUM_MEMORY="{{ jvm_maximum_memory }}"'
