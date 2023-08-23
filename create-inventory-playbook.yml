@@ -1,0 +1,14 @@
+- name: Créer le fichier inventory.ini
+  hosts: localhost
+  tasks:
+    - name: Charger les variables
+      include_vars:
+        file: jira.yml
+      tags: variables
+      
+    - name: Créer le fichier
+      copy:
+        dest: /home/kevin/git/devops/inventory.ini
+        content: |
+          [conteneurs]
+          {{ my_host }} ansible_connection=docker
