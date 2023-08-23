@@ -20,7 +20,7 @@ pipeline {
                 }
             }
         }
-        stage('Install required packages and services in Docker Container') {
+        stage('Install required packages and services') {
             steps {
                 script {
                     // Create inventory.ini
