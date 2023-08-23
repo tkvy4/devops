@@ -1,11 +1,10 @@
 # devops
 
-Jenkinsfile is the script executed by Jenkins piepline
+Jenkinsfile is the script executed by Jenkins pipeline
 It will :
-- load variables from variables.groovy
-- use Dockerfile to build and run the Docker container
+- build and run the container with the help of deploy-playbook.yml
+- install the packages and services in the container with the help of jira-playbook.yml
 
 jira-playbook.yml is the main Ansible playbook for Jira installation
-inventory.ini defines where to run the Ansible playbook
 
-They both load variables from jira.yml
+Variables are loaded from jira.yml, this should be the only file to update
