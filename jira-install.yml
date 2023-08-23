@@ -17,18 +17,18 @@
     command: wget warn=False -P /atlassian/tmp https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-{{ jira_version }}.tar.gz
     when: not archive_file.stat.exists
 
-  - name: Créer un utilisateur
+  - name: Créer utilisateur Jira
     user:
       name: jira
       state: present
 
-  - name: Créer jira-home
+  - name: Créer /atlassian/jira/data
     file:
       path: /atlassian/jira/data
       state: directory
       force: no
 
-  - name: Créer jira-install
+  - name: Créer /atlassian/jira/application
     file:
       path: /atlassian/jira/application
       state: directory
@@ -37,7 +37,7 @@
   - name: Décompresser l'archive
     command: tar -xzvf /atlassian/tmp/atlassian-jira-software-8.20.25.tar.gz -C /atlassian/jira/application/
 
-  - name: Mettre a jour le jira-home
+  - name: Mettre a jour jira-home
     lineinfile:
       path: /atlassian/jira/application/atlassian-jira-software-{{ jira_version }}-standalone/atlassian-jira/WEB-INF/classes/jira-application.properties
       regexp: 'jira.home =$'
