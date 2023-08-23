@@ -12,21 +12,25 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Build and run the container') {
+        stage('Create the container') {
             steps {
                 script {
-                    // Execute Ansible playbook : deploy-playbook.yml
-                    sh 'ansible-playbook deploy-playbook.yml'
+                    // Build and run Docker container : container-playbook.yml
+                    sh 'ansible-playbook container-playbook.yml'
+                    // Create inventory.ini
+                    sh 'ansible-playbook /home/kevin/git/devops/create-inventory-playbook.yml'
+                    // Install packages in Docker container : packages-playbook.yml
+                    sh 'ansible-playbook -i /home/kevin/git/devops/inventory.ini /home/kevin/git/devops/packages-playbook.yml'
                 }
             }
         }
-        stage('Install required packages and services') {
+        stage('Install Jira') {
             steps {
                 script {
                     // Create inventory.ini
                     sh 'ansible-playbook /home/kevin/git/devops/create-inventory-playbook.yml'
-                    // Execute Ansible playbook : jira-playbook.yml
-                    sh 'ansible-playbook -i /home/kevin/git/devops/inventory.ini /home/kevin/git/devops/packages-playbook.yml'
+                    // Execute Ansible playbook : packages-playbook.yml
+                    sh 'ansible-playbook -i /home/kevin/git/devops/inventory.ini /home/kevin/git/devops/jira-install.yml'
                     }
             }
         }
