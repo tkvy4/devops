@@ -2,10 +2,16 @@
 - name: Récupérer les fichiers sur Git
   hosts: localhost
   tasks:
-    - name: Supprimer le répertoire
+    - name: Vérifier si le répertoire existe
+      stat:
+        path: /home/kevin/git/devops
+      register: directory_stat
+
+    - name: Supprimer le répertoire s'il existe
       file:
         path: /home/kevin/git/devops
         state: absent
+      when: directory_stat.stat.exists
 
     - name: Cloner le dépôt Git
       git:
