@@ -10,7 +10,7 @@ RUN apt-get update && \
     python2.7 get-pip.py && \
     pip install docker-py
     # Packages to install
-    apt install -y curl python2.7 sudo && \
+    apt install -y curl nano python2.7 sudo && \
     rm -rf /var/lib/apt/lists/* && \
     apt update
     
