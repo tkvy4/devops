@@ -9,3 +9,5 @@ Dockerfile is used to configure and run the container (OS version, packages to i
 jira-playbook.yml is the main Ansible playbook for Jira installation
 
 Variables are loaded from jira.yml, this should be the only file to update
+
+This branch contains files to deploy everything with the help of Ansible scripts only
