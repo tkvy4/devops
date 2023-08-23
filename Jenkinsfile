@@ -16,7 +16,7 @@ pipeline {
             steps {
                 script {
                     // Execute Ansible playbook : deploy-playbook.yml
-                    sh 'ansible-playbook /home/kevin/git/devops/deploy-playbook.yml'
+                    sh 'ansible-playbook deploy-playbook.yml'
                 }
             }
         }
