@@ -26,7 +26,7 @@ pipeline {
                     // Create inventory.ini
                     sh 'ansible-playbook /home/kevin/git/devops/create-inventory-playbook.yml'
                     // Execute Ansible playbook : jira-playbook.yml
-                    sh 'ansible-playbook -i /home/kevin/git/devops/inventory.ini /home/kevin/git/devops/jira-playbook.yml'
+                    sh 'ansible-playbook -i /home/kevin/git/devops/inventory.ini /home/kevin/git/devops/packages-playbook.yml'
                     }
             }
         }
