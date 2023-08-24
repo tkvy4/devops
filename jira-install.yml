@@ -68,3 +68,9 @@
       path: /atlassian/jira/application/atlassian-jira-software-{{ jira_version }}-standalone/bin/setenv.sh
       regexp: '^JVM_MAXIMUM_MEMORY='
       line: 'JVM_MAXIMUM_MEMORY="{{ jvm_maximum_memory }}"'
+
+  - name: Créer le lien current
+    file:
+      src: /atlassian/jira/application/atlassian-jira-software-{{ jira_version }}-standalone
+      dest: /atlassian/jira/application/current
+      state: link
