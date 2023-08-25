@@ -74,3 +74,33 @@
       src: /atlassian/jira/application/atlassian-jira-software-{{ jira_version }}-standalone
       dest: /atlassian/jira/application/current
       state: link
+
+# Download and install java into /atlassian/java/
+# then ln -s jre
+
+
+- name: Installer Java
+  hosts: all
+  tasks:
+
+  - name: Installer Java 11.0.10+9
+    get_url:
+      url: "https://www.oracle.com/webapps/redirect/signon?nexturl=https://download.oracle.com/otn/java/jdk/11.0.10%2B8/020c4a6d33b74f6a9d2bc6fbf189da81/jdk-11.0.10_linux-x64_bin.tar.gz"
+      url: "https://www.oracle.com/webapps/redirect/signon?nexturl=https://download.oracle.com/otn/java/jdk/11.0.9%2B7/eec35ebefb3f4133bd045b891f05db94/jdk-11.0.9_linux-x64_bin.tar.gz"
+- name: Creer le service Jira
+  hosts: localhost
+  tasks:
+
+  - name: Charger les variables
+    include_vars:
+      file: jira.yml
+    tags: variables
+
+  - name: Creer le service Jira
+    command: docker cp /home/kevin/git/devops/jira.service {{ my_host }}:/etc/init.d/jira
+
+  - name: Changer le owner du service
+    command: docker exec {{ my_host }} chown root:root /etc/init.d/jira
+
+  - name: Rendre le service executable
+    command: docker exec {{ my_host }} chmod +x /etc/init.d/jira
