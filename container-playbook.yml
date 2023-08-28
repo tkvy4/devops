@@ -53,13 +53,13 @@
       docker_container:
         name: "{{ my_host }}"
         state: stopped
-      ignore_errors: yes
+      #ignore_errors: yes
 
     - name: Supprimer le conteneur s'il existe
       docker_container:
         name: "{{ my_host }}"
         state: absent
-      ignore_errors: yes
+      #ignore_errors: yes
     
     - name: Construire une nouvelle image Docker
       community.docker.docker_image:
