@@ -52,12 +52,14 @@
     - name: Stop le conteneur s'il est démarré
       docker_container:
         name: "{{ my_host }}"
+        image: "{{ my_host }}"
         state: stopped
       #ignore_errors: yes
 
     - name: Supprimer le conteneur s'il existe
       docker_container:
         name: "{{ my_host }}"
+        image: "{{ my_host }}"
         state: absent
       #ignore_errors: yes
     
