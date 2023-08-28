@@ -90,7 +90,7 @@
     - name: Filtrer les liens de {{ jdk_version }}
       set_fact:
         jdk11_links: "{{ tar_links.stdout_lines | select('search', jdk_version) | select('search', 'linux') | select('search', java_version) | list }}"
-       when: not java_file.stat.exists
+      when: not java_file.stat.exists
 
     - name: Obtenir le lien le plus récent
       set_fact:
