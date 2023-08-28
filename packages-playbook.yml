@@ -75,9 +75,9 @@
         state: started
 
     - name: Check if Java already installed
-    stat:
-      path: "/atlassian/java/current
-    register: java_file
+      stat:
+        path: "/atlassian/java/current
+      register: java_file
     
     - name: Récupérer les liens téléchargeables
       shell: "curl -s https://jdk.java.net/archive/ | grep -oP 'https?://[^\\s]+\\.tar\\.gz'"
