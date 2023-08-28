@@ -52,7 +52,6 @@
     - name: Vérifier l'état du conteneur
       docker_container_info:
         name: "{{ my_host }}"
-        api_version: 1.41
       register: container_info
     
     - name: Stop le conteneur s'il est démarré
