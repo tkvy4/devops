@@ -49,11 +49,18 @@
         group: jenkins
         mode: "0644"
 
+    - name: Vérifier l'état du conteneur
+      docker_container_info:
+        name: "{{ my_host }}"
+        api_version: 1.41
+      register: container_info
+    
     - name: Stop le conteneur s'il est démarré
       docker_container:
         name: "{{ my_host }}"
         image: "{{ my_host }}"
         state: stopped
+      when: container_info.exists
       #ignore_errors: yes
 
     - name: Supprimer le conteneur s'il existe
@@ -61,6 +68,7 @@
         name: "{{ my_host }}"
         image: "{{ my_host }}"
         state: absent
+      when: container_info.exists
       #ignore_errors: yes
     
     - name: Construire une nouvelle image Docker
