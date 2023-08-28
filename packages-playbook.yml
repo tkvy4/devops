@@ -82,24 +82,23 @@
     - name: Récupérer les liens téléchargeables
       shell: "curl -s https://jdk.java.net/archive/ | grep -oP 'https?://[^\\s]+\\.tar\\.gz'"
       register: tar_links
-      when: not java_file.stat.exists
 
     - name: Récupérer le premier nombre et ajouter 'jdk' au début
       set_fact:
         jdk_version: "jdk{{ java_version | regex_replace('^([0-9]+)\\..*', '\\1') }}"
-      when: not java_file.stat.exists
 
     - name: Filtrer les liens de {{ jdk_version }}
       set_fact:
         jdk11_links: "{{ tar_links.stdout_lines | select('search', jdk_version) | select('search', 'linux') | select('search', java_version) | list }}"
-      when: not java_file.stat.exists
+       when: not java_file.stat.exists
 
     - name: Obtenir le lien le plus récent
       set_fact:
         latest_link: "{{ jdk11_links | sort | last }}"
-      when: not java_file.stat.exists
+      when: jdk11_links | length > 0
 
     - name: Télécharger le fichier .tar.gz de la version {{ java_version }}
       get_url:
         url: "{{ latest_link }}"
         dest: "/atlassian/java/{{ latest_link | basename }}"
+        when: latest_link is defined
