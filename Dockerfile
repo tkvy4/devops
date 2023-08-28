@@ -6,13 +6,11 @@ RUN apt-get update && \
     # Python dependencies
     apt install -y software-properties-common && \
     add-apt-repository -y ppa:deadsnakes/ppa && \
-    # Install Python 2.7 and related packages
-    apt install -y python2.7 && \
+    # Install Python 2.7 and other packages
+    apt install -y curl nano python2.7 sudo wget && \
     curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py && \
     python2.7 get-pip.py && \
-    pip install docker-py && \    
-    # Install other required packages
-    apt install -y curl nano sudo wget && \
+    pip install docker-py && \
     rm -rf /var/lib/apt/lists/* && \
     apt update
     
