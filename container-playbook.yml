@@ -59,7 +59,7 @@
         name: "{{ my_host }}"
         image: "{{ my_host }}"
         state: stopped
-      when: container_info.exists
+      when: container_info.container.State.Running
       #ignore_errors: yes
 
     - name: Supprimer le conteneur s'il existe
