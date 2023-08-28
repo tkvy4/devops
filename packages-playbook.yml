@@ -1,5 +1,5 @@
 ---
-- name: Installer et configurer le conteneur
+- name: Install packages and services
   hosts: all
   vars:
     ansible_python_interpreter: /usr/bin/python3
@@ -7,7 +7,7 @@
 
   tasks:
 
-    - name: Charger les variables
+    - name: Load variables
       include_vars:
         file: jira.yml
       tags: variables
@@ -18,26 +18,26 @@
         id: 7FCC7D46ACCC4CF8
         state: present
 
-    - name: Ajouter le référentiel PostgreSQL
+    - name: Add PostgreSQL repo
       become: yes
       apt_repository:
         repo: "deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release }}-pgdg main"
         state: present
       register: apt_repository_result
 
-    - name: Importer la clé GPG pour le référentiel PostgreSQL
+    - name: Import GPG key for PostgreSQL repo
       become: yes
       apt_key:
         url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
         state: present
       when: apt_repository_result.changed
 
-    - name: Mettre à jour la liste des paquets
+    - name: apt update
       become: yes
       apt:
         update_cache: yes
 
-    - name: Installer PostgreSQL {{ psql_version }} et les dépendances
+    - name: Install PostgreSQL {{ psql_version }} and dependencies
       apt:
         name:
           - postgresql-{{ psql_version }}
@@ -45,31 +45,40 @@
           #- postgresql-contrib-{{ psql_version }}
         state: present
 
-    - name: Activez le service PostgreSQL au démarrage
+    - name: Start PostgreSQL service
       service:
         name: postgresql
         enabled: yes
         state: started
 
-    - name: Installer SSH
+    - name: Install SSH
       apt:
         name: openssh-server
         state: present
 
-    - name: Activez le service SSH au démarrage
+    - name: Start SSH service
       service:
         name: ssh
         enabled: yes
         state: started
 
-    - name: Installer Apache
+    - name: Install Apache2
       package:
         name: apache2  # Pour les distributions basées sur Debian (comme Ubuntu)
         state: present
       when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
 
-    - name: Activez le service Apache au démarrage
+    - name: Start Apache2 service
       service:
         name: apache2
         enabled: yes
         state: started
+
+    - name: Check if Java already installed
+    stat:
+      path: "/atlassian/java/openjdk-{{ java_version }}_linux-x64_bin.tar.gz"
+    register: java_file
+    
+    - name: Install Java 
+      command: wget warn=False -P /atlassian/java https://download.java.net/java/GA/jdk11/9/GPL/openjdk-{{ java_version }}_linux-x64_bin.tar.gz
+      when: not java_file.stat.exists
