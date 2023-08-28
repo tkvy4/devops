@@ -1,49 +1,49 @@
 ---
-- name: Installer Jira
+- name: Install Jira
   hosts: all
   tasks:
 
-  - name: Charger les variables
+  - name: Load variables
     include_vars:
       file: jira.yml
     tags: variables
 
-  - name: Vérifier si le fichier existe
+  - name: Check if archive already exists
     stat:
       path: "/atlassian/tmp/atlassian-jira-software-{{ jira_version }}.tar.gz"
     register: archive_file
 
-  - name: Télécharger l'archive Jira
+  - name: Download Jira archive if doesn't exist
     command: wget warn=False -P /atlassian/tmp https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-{{ jira_version }}.tar.gz
     when: not archive_file.stat.exists
 
-  - name: Créer utilisateur Jira
+  - name: Create Jira user
     user:
       name: jira
       state: present
 
-  - name: Créer /atlassian/jira/data
+  - name: Create /atlassian/jira/data
     file:
       path: /atlassian/jira/data
       state: directory
       force: no
 
-  - name: Créer /atlassian/jira/application
+  - name: Create /atlassian/jira/application
     file:
       path: /atlassian/jira/application
       state: directory
       force: no
 
-  - name: Décompresser l'archive
+  - name: Untar archive
     command: tar -xzvf /atlassian/tmp/atlassian-jira-software-8.20.25.tar.gz -C /atlassian/jira/application/
 
-  - name: Mettre a jour jira-home
+  - name: Set jira-home
     lineinfile:
       path: /atlassian/jira/application/atlassian-jira-software-{{ jira_version }}-standalone/atlassian-jira/WEB-INF/classes/jira-application.properties
       regexp: 'jira.home =$'
       line: 'jira.home = /atlassian/jira/data'
 
-  - name: Mettre a jour server.xml
+  - name: Set ProxyName in server.xml
     lineinfile:
       path: /atlassian/jira/application/atlassian-jira-software-{{ jira_version }}-standalone/conf/server.xml
       insertafter: '.*redirectPort="8443".*'
@@ -51,56 +51,80 @@
       # 19 blank spaces
 
   # Pas necessaire dans un use case 'normal', Jira devrait toujours utiliser le port 8080
-  - name: Mettre a jour connector port server.xml
+  - name: Update connector port in server.xml
     replace:
       path: /atlassian/jira/application/atlassian-jira-software-{{ jira_version }}-standalone/conf/server.xml
       regexp: 'port="8080"'
       replace: 'port="{{ port }}"'
 
-  - name: Mettre a jour JVM_MIN setenv.sh
+  - name: Set JVM_MIN in setenv.sh
     lineinfile:
       path: /atlassian/jira/application/atlassian-jira-software-{{ jira_version }}-standalone/bin/setenv.sh
       regexp: '^JVM_MINIMUM_MEMORY='
       line: 'JVM_MINIMUM_MEMORY="{{ jvm_minimum_memory }}"'
 
-  - name: Mettre a jour JVM_MAX setenv.sh
+  - name: Set JVM_MAX in setenv.sh
     lineinfile:
       path: /atlassian/jira/application/atlassian-jira-software-{{ jira_version }}-standalone/bin/setenv.sh
       regexp: '^JVM_MAXIMUM_MEMORY='
       line: 'JVM_MAXIMUM_MEMORY="{{ jvm_maximum_memory }}"'
 
-  - name: Créer le lien current
-    file:
-      src: /atlassian/jira/application/atlassian-jira-software-{{ jira_version }}-standalone
-      dest: /atlassian/jira/application/current
-      state: link
+  - name: Create current symlink
+  #  file:
+  #    src: /atlassian/jira/application/atlassian-jira-software-{{ jira_version }}-standalone
+  #    dest: /atlassian/jira/application/current
+  #    state: link
+    command: sudo -u jira ln -s /atlassian/jira/application/atlassian-jira-software-{{ jira_version }}-standalone /atlassian/jira/application/current
+    become: yes
+    become_user: root
+    docker_container:
+      name: {{ my_host }}
 
-# Download and install java into /atlassian/java/
-# then ln -s jre
-
-
-- name: Installer Java
-  hosts: all
-  tasks:
-
-  - name: Installer Java 11.0.10+9
-    get_url:
-      url: "https://www.oracle.com/webapps/redirect/signon?nexturl=https://download.oracle.com/otn/java/jdk/11.0.10%2B8/020c4a6d33b74f6a9d2bc6fbf189da81/jdk-11.0.10_linux-x64_bin.tar.gz"
-      url: "https://www.oracle.com/webapps/redirect/signon?nexturl=https://download.oracle.com/otn/java/jdk/11.0.9%2B7/eec35ebefb3f4133bd045b891f05db94/jdk-11.0.9_linux-x64_bin.tar.gz"
-- name: Creer le service Jira
+- name: Create Jira service
   hosts: localhost
   tasks:
 
-  - name: Charger les variables
+  - name: Load variables
     include_vars:
       file: jira.yml
     tags: variables
 
-  - name: Creer le service Jira
+  - name: Get Jira service file
     command: docker cp /home/kevin/git/devops/jira.service {{ my_host }}:/etc/init.d/jira
 
-  - name: Changer le owner du service
+  - name: Change ownership
     command: docker exec {{ my_host }} chown root:root /etc/init.d/jira
 
-  - name: Rendre le service executable
+  - name: Make it executable
     command: docker exec {{ my_host }} chmod +x /etc/init.d/jira
+
+- name: Create jiradb
+  hosts: localhost
+  tasks:
+
+  - name: Create database
+    postgresql_db:
+      name: jiradb
+      encoding: UNICODE
+      lc_collate: en_US.UTF-8
+      lc_ctype: en_US.UTF-8
+      template: template0
+    become: yes
+    become_user: postgres
+
+  - name: Create jiradbuser
+    postgresql_user:
+      name: jiradbuser
+      password: 'eecai1ephahya3eimielieph1OohoHie'
+      login_password: yes
+    become: yes
+    become_user: postgres
+
+  - name: Grant permissions
+    postgresql_privs:
+      name: jiradb
+      role: jiradbuser
+      priv: ALL
+      state: present
+    become: yes
+    become_user: postgres
