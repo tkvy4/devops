@@ -6,3 +6,4 @@ port: "8081"
 domain_name: "kevin-jira.godzilla.com"
 jvm_minimum_memory: "2048m"
 jvm_maximum_memory: "2048m"
+java_version: "11.0.2" # Head over to https://jdk.java.net/archive first for the target version
