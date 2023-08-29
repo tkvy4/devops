@@ -44,7 +44,7 @@
           #- postgresql-client-{{ psql_version }}
           #- postgresql-contrib-{{ psql_version }}
         state: present
-        no_log: true
+      no_log: true
 
     - name: Start PostgreSQL service
       service:
