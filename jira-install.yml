@@ -107,19 +107,19 @@
         lc_ctype: en_US.UTF-8
         template: template0
 
-  - name: Create jiradbuser
-    postgresql_user:
-      name: jiradbuser
-      password: 'eecai1ephahya3eimielieph1OohoHie'
-      login_password: yes
-    become: yes
+    - name: Create jiradbuser
+      postgresql_user:
+        name: jiradbuser
+        password: 'eecai1ephahya3eimielieph1OohoHie'
+        login_password: yes
+      become: yes
     become_user: postgres
 
-  - name: Grant permissions
-    postgresql_privs:
-      name: jiradb
-      role: jiradbuser
-      priv: ALL
-      state: present
-    become: yes
-    become_user: postgres
+    - name: Grant permissions
+      postgresql_privs:
+        name: jiradb
+        role: jiradbuser
+        priv: ALL
+        state: present
+      become: yes
+      become_user: postgres
