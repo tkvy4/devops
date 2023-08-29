@@ -93,6 +93,9 @@
       when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
       no_log: true
 
+    - name: Install Apache2 module
+      command: sudo a2enmod proxy
+
     - name: Start Apache2 service
       service:
         name: apache2
