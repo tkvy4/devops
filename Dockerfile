@@ -12,6 +12,7 @@ RUN apt update && \
     python2.7 get-pip.py && \
     pip install docker-py && \
     apt install python3-pip && \
+    apt update && \
     apt install python3-psycopg2 && \
     pip install psycopg2-binary && \
     rm -rf /var/lib/apt/lists/* && \
