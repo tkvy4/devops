@@ -44,6 +44,7 @@
           #- postgresql-client-{{ psql_version }}
           #- postgresql-contrib-{{ psql_version }}
         state: present
+        no_log: true
 
     - name: Start PostgreSQL service
       service:
@@ -55,6 +56,7 @@
       apt:
         name: openssh-server
         state: present
+        no_log: true
 
     - name: Start SSH service
       service:
