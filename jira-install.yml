@@ -133,7 +133,7 @@
       ignore_errors: yes
       no_log: true
 
-    - name: Display
+    - name: Check pg_hba.conf output
       debug:
         msg: "Previous error is not fatal and can be ignored."
       when: pg_hba_exists.stdout == "" or pg_hba_exists.rc != 0
@@ -153,6 +153,9 @@
         name: postgresql
         enabled: yes
         state: restarted
+
+    - name: Install python3-psycopg2 module
+      command: apt install python3-psycopg2
 
     - name: Create new database
       postgresql_db:
