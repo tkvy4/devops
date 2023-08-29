@@ -13,6 +13,7 @@ RUN apt update && \
     pip install docker-py && \
     apt install python3-pip && \
     pip install psycopg2-binary && \
+    apt install net-tools && \
     rm -rf /var/lib/apt/lists/* && \
     apt update
     
