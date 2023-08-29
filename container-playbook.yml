@@ -53,22 +53,44 @@
       docker_container_info:
         name: "{{ my_host }}"
       register: container_info
-    
-    - name: Stop le conteneur s'il est démarré
-      docker_container:
-        name: "{{ my_host }}"
-        image: "{{ my_host }}"
-        state: stopped
-      when: container_info.container.State.Running
-      #ignore_errors: yes
 
-    - name: Supprimer le conteneur s'il existe
-      docker_container:
-        name: "{{ my_host }}"
-        image: "{{ my_host }}"
-        state: absent
+    - name: Stop container
+      block:
+        - name: Container is running
+          docker_container:
+            name: "{{ my_host }}"
+            image: "{{ my_host }}"
+            state: stopped
+          when: container_info.container.State.Running == true
+
+          - name: Container stopped
+            debug:
+              msg: "Le conteneur a ete stoppe..."
+
+        - name: Container is already stopped
+          debug:
+            msg: "Le conteneur est deja stoppe...Nothing to do"
+          when: container_info.container.State.Running == false
+
       when: container_info.exists
-      #ignore_errors: yes
+
+    - name: Remove container
+      block:
+        - name: Container exist
+          docker_container:
+            name: "{{ my_host }}"
+            image: "{{ my_host }}"
+            state: absent
+          when: container_info.exists
+
+          - name: Container deleted
+            debug:
+              msg: "Le conteneur a ete supprime..."
+
+        - name: Container doesn't exist
+          debug:
+            msg: "Le conteneur n'existe pas...Nothing to do"
+          when: not container_info.exists
     
     - name: Construire une nouvelle image Docker
       community.docker.docker_image:
