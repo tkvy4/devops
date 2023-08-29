@@ -101,7 +101,7 @@
     command: docker exec {{ my_host }} chmod +x /etc/init.d/jira
 
 - name: Create jiradb
-  hosts: localhost
+  hosts: all
   tasks:
 
     - name: Vérifier si le répertoire existe
