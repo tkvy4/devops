@@ -69,6 +69,7 @@
         name: apache2  # Pour les distributions basées sur Debian (comme Ubuntu)
         state: present
       when: ansible_distribution == 'Ubuntu' or ansible_distribution == 'Debian'
+      no_log: true
 
     - name: Start Apache2 service
       service:
