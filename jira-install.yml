@@ -35,7 +35,7 @@
       force: no
 
   - name: Untar archive
-    command: tar -xzvf /atlassian/tmp/atlassian-jira-software-8.20.25.tar.gz -C /atlassian/jira/application/
+    command: tar -xzvf /atlassian/tmp/atlassian-jira-software-{{ jira_version }}.tar.gz -C /atlassian/jira/application/
 
   - name: Set jira-home
     lineinfile:
