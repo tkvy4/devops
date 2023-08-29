@@ -71,9 +71,12 @@
       regexp: '^JVM_MAXIMUM_MEMORY='
       line: 'JVM_MAXIMUM_MEMORY="{{ jvm_maximum_memory }}"'
 
+  - name: Update ownershop of /atlassian/jira/application/atlassian-jira-software-{{ jira_version }}-standalone
+    command: sudo chown -R jira:jira /atlassian/jira/application/atlassian-jira-software-{{ jira_version }}-standalone
+
   - name: Créer le lien symbolique vers un dossier cible
     file:
-      src: /atlassian/jira/application/atlassian-jira-software-8.20.25-standalone
+      src: /atlassian/jira/application/atlassian-jira-software-{{ jira_version }}-standalone
       dest: /atlassian/jira/application/current
       state: link
     
