@@ -126,10 +126,17 @@
         line: "data_directory = '/atlassian/database/data/postgresql/12/main'"
       become: yes
 
-    - name: Check pg_hba.conf
+     - name: Check pg_hba.conf
       shell: "grep -E 'host[[:space:]]+all[[:space:]]+postgres[[:space:]]+' /etc/postgresql/12/main/pg_hba.conf"
       register: pg_hba_exists
       changed_when: false
+      ignore_errors: yes
+      no_log: true
+
+    - name: Display
+      debug:
+        msg: "Previous error is not fatal and can be ignored."
+      when: pg_hba_exists.stdout == "" or pg_hba_exists.rc != 0
 
     - name: Ajouter la configuration à pg_hba.conf
       blockinfile:
