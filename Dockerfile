@@ -2,7 +2,7 @@
 FROM ubuntu:18.04
 
 # Mettez à jour les packages et installez des outils supplémentaires
-RUN apt-get update && \
+RUN apt update && \
     # Python dependencies
     apt install -y software-properties-common && \
     add-apt-repository -y ppa:deadsnakes/ppa && \
