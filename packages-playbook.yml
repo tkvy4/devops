@@ -74,14 +74,19 @@
         enabled: yes
         state: started
 
-    - name: Vérifier l'existence du répertoire /atlassian/java/current
+    - name: Check if java directory already exists
       stat:
-        path: "/atlassian/java/current"
-      register: java_file
-    
+        path: "/atlassian/java"
+      register: java_directory
+
+    - name: Créer le répertoire s'il n'existe pas
+      command: mkdir -p /atlassian/java
+      when: not java_directory.stat.exists
+
     - name: Récupérer les liens téléchargeables
       shell: "curl -s https://jdk.java.net/archive/ | grep -oP 'https?://[^\\s]+\\.tar\\.gz'"
       register: tar_links
+      no_log: true
 
     - name: Récupérer le premier nombre et ajouter 'jdk' au début
       set_fact:
@@ -90,15 +95,21 @@
     - name: Filtrer les liens de {{ jdk_version }}
       set_fact:
         jdk11_links: "{{ tar_links.stdout_lines | select('search', jdk_version) | select('search', 'linux') | select('search', java_version) | list }}"
-      when: not java_file.stat.exists
 
     - name: Obtenir le lien le plus récent
       set_fact:
         latest_link: "{{ jdk11_links | sort | last }}"
-      when: jdk11_links | length > 0
 
     - name: Télécharger le fichier .tar.gz de la version {{ java_version }}
       get_url:
         url: "{{ latest_link }}"
         dest: "/atlassian/java/{{ latest_link | basename }}"
-        when: latest_link is defined
+
+    - name: Untar Java archive
+      command: tar -xzvf /atlassian/java/openjdk-{{ java_version }}_linux-x64_bin.tar.gz -C /atlassian/java
+      no_log: true
+
+    - name: Create current symlink
+      command: sudo ln -s /atlassian/java/jdk-{{ java_version }} /atlassian/java/current
+      become: yes
+      become_user: root
