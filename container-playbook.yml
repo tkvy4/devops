@@ -110,6 +110,7 @@
         ports:
           - "{{ port }}:80"
           - "5432:5432"
+          - "22:22"
         hostname: "{{ my_host }}"
         state: started
       no_log: true
