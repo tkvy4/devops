@@ -99,6 +99,7 @@
         build:
           path: /home/kevin/docker_container/{{ my_host }}
         state: present
+        no_log: true
 
     - name: Run un nouveau conteneur Docker
       docker_container:
@@ -108,3 +109,4 @@
           - "{{ port }}:80"
         hostname: "{{ my_host }}"
         state: started
+        no_log: true
