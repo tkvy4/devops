@@ -104,13 +104,6 @@
   hosts: localhost
   tasks:
 
-    - name: Update postgresql.conf
-      ansible.builtin.lineinfile:
-        path: /etc/postgresql/12/main/postgresql.conf
-        regexp: '^data_directory = .*'
-        line: "data_directory = '/atlassian/database/data/postgresql/12/main'"
-      become: yes
-
     - name: Vérifier si le répertoire existe
       stat:
         path: /atlassian/database/data
@@ -123,8 +116,36 @@
     - name: Copy PostgreSQL data directory within container
       command: sudo cp -r /var/lib/postgresql /atlassian/database/data
 
-    - name: Update ownership of /atlassian/database/data/postgresql
+    - name: Update ownership of /atlassian/database
       command: sudo chown -R postgres:postgres /atlassian/database/
+
+    - name: Update postgresql.conf
+      ansible.builtin.lineinfile:
+        path: /etc/postgresql/12/main/postgresql.conf
+        regexp: '^data_directory = .*'
+        line: "data_directory = '/atlassian/database/data/postgresql/12/main'"
+      become: yes
+
+    - name: Check pg_hba.conf
+      shell: "grep -E 'host[[:space:]]+all[[:space:]]+postgres[[:space:]]+' /etc/postgresql/12/main/pg_hba.conf"
+      register: pg_hba_exists
+      changed_when: false
+
+    - name: Ajouter la configuration à pg_hba.conf
+      blockinfile:
+        path: /etc/postgresql/12/main/pg_hba.conf
+        marker: "# ANSIBLE: BEGIN postgres auth"
+        insertafter: ".*# IPv4 local connections:"
+        block: |
+          host    all             postgres        127.0.0.1/32            trust
+          host    all             postgres        ::1/128                 trust
+      when: pg_hba_exists.rc != 0
+
+    - name: Start PostgreSQL service
+      service:
+        name: postgresql
+        enabled: yes
+        state: restarted
 
     - name: Create new database
       postgresql_db:
