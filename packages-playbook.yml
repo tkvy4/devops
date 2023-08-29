@@ -114,5 +114,3 @@
 
     - name: Create current symlink
       command: ln -s /atlassian/java/jdk-{{ java_version }} /atlassian/java/current
-      become: yes
-      become_user: root
