@@ -108,7 +108,7 @@
         name: "{{ my_host }}"
         image: "{{ my_host }}"
         ports:
-          - "{{ port }}:80"
+          - "{{ port }}:{{ port }}"
           - "5432:5432"
         hostname: "{{ my_host }}"
         state: started
