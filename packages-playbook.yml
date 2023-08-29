@@ -56,7 +56,7 @@
       apt:
         name: openssh-server
         state: present
-        no_log: true
+      no_log: true
 
     - name: Start SSH service
       service:
