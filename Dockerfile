@@ -18,7 +18,6 @@ RUN apt-get update && \
 # https://linuxize.com/post/how-to-install-python-3-9-on-ubuntu-20-04/
     
 # Exposez les ports nécessaires
-EXPOSE 22
 EXPOSE 80
 EXPOSE 443
 EXPOSE 5432
