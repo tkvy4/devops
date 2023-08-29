@@ -113,6 +113,6 @@
       no_log: true
 
     - name: Create current symlink
-      command: sudo ln -s /atlassian/java/jdk-{{ java_version }} /atlassian/java/current
+      command: ln -s /atlassian/java/jdk-{{ java_version }} /atlassian/java/current
       become: yes
       become_user: root
