@@ -63,9 +63,9 @@
             state: stopped
           when: container_info.container.State.Running == true
 
-          - name: Container stopped
-            debug:
-              msg: "Le conteneur a ete stoppe..."
+        - name: Container stopped
+          debug:
+            msg: "Le conteneur a ete stoppe..."
 
         - name: Container is already stopped
           debug:
@@ -83,9 +83,9 @@
             state: absent
           when: container_info.exists
 
-          - name: Container deleted
-            debug:
-              msg: "Le conteneur a ete supprime..."
+        - name: Container deleted
+          debug:
+            msg: "Le conteneur a ete supprime..."
 
         - name: Container doesn't exist
           debug:
