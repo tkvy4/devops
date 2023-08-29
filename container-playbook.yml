@@ -113,4 +113,4 @@
           - "22:22"
         hostname: "{{ my_host }}"
         state: started
-      no_log: true
+      #no_log: true
