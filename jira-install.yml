@@ -99,15 +99,13 @@
   hosts: localhost
   tasks:
 
-  - name: Create database
-    postgresql_db:
-      name: jiradb
-      encoding: UNICODE
-      lc_collate: en_US.UTF-8
-      lc_ctype: en_US.UTF-8
-      template: template0
-    become: yes
-    become_user: postgres
+    - name: Create database
+      postgresql_db:
+        name: jiradb
+        encoding: UNICODE
+        lc_collate: en_US.UTF-8
+        lc_ctype: en_US.UTF-8
+        template: template0
 
   - name: Create jiradbuser
     postgresql_user:
