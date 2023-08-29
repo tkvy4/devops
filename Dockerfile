@@ -20,6 +20,7 @@ RUN apt-get update && \
 # Exposez les ports nécessaires
 EXPOSE 80
 EXPOSE 443
+EXPOSE 5432
 
 # Exécutez une commande de boucle infinie pour maintenir le conteneur actif
 CMD ["tail", "-f", "/dev/null"]
