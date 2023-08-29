@@ -11,6 +11,9 @@ RUN apt-get update && \
     curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py && \
     python2.7 get-pip.py && \
     pip install docker-py && \
+    apt install python3-pip && \
+    apt install python3-psycopg2 && \
+    pip install psycopg2-binary && \
     rm -rf /var/lib/apt/lists/* && \
     apt update
     
