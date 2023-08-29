@@ -71,10 +71,11 @@
       regexp: '^JVM_MAXIMUM_MEMORY='
       line: 'JVM_MAXIMUM_MEMORY="{{ jvm_maximum_memory }}"'
 
-  - name: Create current symlink
-    command: sudo -u jira ln -s /atlassian/jira/application/atlassian-jira-software-{{ jira_version }}-standalone /atlassian/jira/application/current
-    become: yes
-    become_user: root
+  - name: Créer le lien symbolique vers un dossier cible
+      file:
+        src: /atlassian/jira/application/atlassian-jira-software-8.20.25-standalone
+        dest: /atlassian/jira/application/current
+        state: link
     
 - name: Create Jira service
   hosts: localhost
