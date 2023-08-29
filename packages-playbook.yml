@@ -74,17 +74,17 @@
         enabled: yes
         state: started
 
-    - name: Install SSH
-      apt:
-        name: openssh-server
-        state: present
-      no_log: true
+#    - name: Install SSH
+#      apt:
+#        name: openssh-server
+#        state: present
+#      no_log: true
 
-    - name: Start SSH service
-      service:
-        name: ssh
-        enabled: yes
-        state: started
+ #   - name: Start SSH service
+ #     service:
+ #       name: ssh
+ #       enabled: yes
+ #       state: started
 
     - name: Install Apache2
       package:
