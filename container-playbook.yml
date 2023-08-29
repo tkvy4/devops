@@ -112,4 +112,4 @@
           - "5432:5432"
         hostname: "{{ my_host }}"
         state: started
-      #no_log: true
+      no_log: true
