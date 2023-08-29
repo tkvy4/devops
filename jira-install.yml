@@ -83,7 +83,7 @@
       state: link
 
   - name: Update ownership of /atlassian/jira
-      command: sudo chown -R postgres:postgres /atlassian/jira/
+    command: sudo chown -R postgres:postgres /atlassian/jira/
     
 - name: Create Jira service
   hosts: localhost
