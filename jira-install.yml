@@ -16,6 +16,7 @@
   - name: Download Jira archive if doesn't exist
     command: wget warn=False -P /atlassian/tmp https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-{{ jira_version }}.tar.gz
     when: not archive_file.stat.exists
+    no_log: true
 
   - name: Create Jira user
     user:
@@ -36,6 +37,7 @@
 
   - name: Untar archive
     command: tar -xzvf /atlassian/tmp/atlassian-jira-software-{{ jira_version }}.tar.gz -C /atlassian/jira/application/
+    no_log: true 
 
   - name: Set jira-home
     lineinfile:
