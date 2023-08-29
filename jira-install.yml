@@ -156,6 +156,7 @@
 
     - name: Install python3-psycopg2 module
       command: apt install python3-psycopg2
+      no_log: true
 
     - name: Create new database
       postgresql_db:
