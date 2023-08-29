@@ -46,6 +46,28 @@
         state: present
       no_log: true
 
+    - name: Update datra_directory in /etc/postgresql/12/main/postgresql.conf
+      ansible.builtin.lineinfile:
+        path: /etc/postgresql/12/main/postgresql.conf
+        regexp: '^data_directory = .*'
+        line: "data_directory = '/atlassian/database/data/postgresql/12/main'"
+      become: yes
+
+    - name: Check if /atlassian/database/data exists
+      stat:
+        path: /atlassian/database/data
+      register: database_stat
+
+    - name: Create /atlassian/database/data if it doesn't exist
+      command: mkdir -p /atlassian/database/data/
+      when: not database_stat.stat.exists
+
+    - name: Copy PostgreSQL data directory content in /atlassian/database/data
+      command: sudo cp -r /var/lib/postgresql /atlassian/database/data
+
+    - name: Update ownership of /atlassian/database/data/postgresql
+      command: sudo chown -R postgres:postgres /atlassian/database/
+
     - name: Start PostgreSQL service
       service:
         name: postgresql
